@@ -7,47 +7,31 @@ import android.widget.BaseAdapter
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 
-class StudentAdapter(val students: MutableList<StudentModel>): BaseAdapter() {
-    override fun getCount(): Int {
-        return students.size
+class StudentAdapter(val students: MutableList<StudentModel>, val listener: ItemClickListener? = null): RecyclerView.Adapter<StudentAdapter.MyViewHolder>(){
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.student_item, parent, false)
+        return MyViewHolder(itemView, listener)
     }
 
-    override fun getItem(position: Int): Any {
-        return students[position]
-    }
+    override fun getItemCount(): Int = students.size
 
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
-
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        var viewHolder: MyViewHolder
-        var itemView: View
-        if (convertView == null) {
-            itemView = LayoutInflater.from(parent?.context)
-                .inflate(R.layout.student_item, parent, false)
-            viewHolder = MyViewHolder()
-            viewHolder.hoten = itemView.findViewById<TextView>(R.id.name)
-            viewHolder.mssv = itemView.findViewById<TextView>(R.id.id)
-            viewHolder.del = itemView.findViewById<Button>(R.id.delete)
-            itemView.tag = viewHolder
-        } else {
-            itemView = convertView
-            viewHolder = itemView.tag as MyViewHolder
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        holder.hoten.text = students[position].hoten
+        holder.mssv.text = students[position].mssv
+        holder.del.setOnClickListener {
+            students.removeAt(holder.adapterPosition)
+            notifyItemRemoved(holder.adapterPosition)
         }
-        val student = students[position]
-        viewHolder.hoten.text = student.hoten
-        viewHolder.mssv.text = student.mssv
-        viewHolder.del.setOnClickListener{
-            students.removeAt(position)
-            notifyDataSetChanged()
-        }
-        return itemView
     }
-    class MyViewHolder {
-        lateinit var hoten: TextView
-        lateinit var mssv: TextView
-        lateinit var del : Button
+    class MyViewHolder(itemView: View, listener: ItemClickListener?): RecyclerView.ViewHolder(itemView) {
+        val hoten = itemView.findViewById<TextView>(R.id.name)
+        val mssv = itemView.findViewById<TextView>(R.id.id)
+        val del  = itemView.findViewById<Button>(R.id.delete)
+    }
+
+    interface ItemClickListener {
+        fun onItemClicked(position: Int)
     }
 }

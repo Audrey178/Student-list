@@ -8,6 +8,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class StudentListActivity : AppCompatActivity() {
     private lateinit var adapter: StudentAdapter
@@ -17,19 +19,24 @@ class StudentListActivity : AppCompatActivity() {
         val studentList = mutableListOf<StudentModel>()
         repeat(20){studentList.add(StudentModel("Student $it", "SV $it"))}
 
-        val listItem = findViewById<ListView>(R.id.list_item)
+        val listItem = findViewById<RecyclerView>(R.id.list_item)
         val nameSV = findViewById<EditText>(R.id.ten)
         val msSV = findViewById<EditText>(R.id.maso)
         val buttonadd = findViewById<Button>(R.id.add)
 
 
-        val adapter = StudentAdapter(studentList)
+        val adapter = StudentAdapter(studentList, object: StudentAdapter.ItemClickListener{
+            override fun onItemClicked(position: Int) {
+                adapter.notifyItemRemoved(position)
+            }
+        })
 
-
+        listItem.adapter = adapter
+        listItem.layoutManager = LinearLayoutManager(this)
         buttonadd.setOnClickListener {
             studentList.add(StudentModel(nameSV.text.toString(),msSV.text.toString()))
-            adapter.notifyDataSetChanged()
+            adapter.notifyItemInserted(studentList.size)
         }
-        listItem.adapter = adapter
+
     }
 }
