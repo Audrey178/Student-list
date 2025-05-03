@@ -1,0 +1,19 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_update"
+        android:title="Cập nhật"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_delete"
+        android:title="Xóa"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_call"
+        android:title="Gọi"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_email"
+        android:title="Gửi email"
+        app:showAsAction="never" />
+</menu>
