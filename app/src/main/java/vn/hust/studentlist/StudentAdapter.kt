@@ -9,7 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class StudentAdapter(val students: MutableList<StudentModel>): RecyclerView.Adapter<StudentAdapter.MyViewHolder>(){
+class StudentAdapter(val students: MutableList<StudentModel>,val listener: DeleteListener): RecyclerView.Adapter<StudentAdapter.MyViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.student_item, parent, false)
@@ -37,8 +37,7 @@ class StudentAdapter(val students: MutableList<StudentModel>): RecyclerView.Adap
                         true
                     }
                     R.id.menu_delete -> {
-                        students.removeAt(position)
-                        notifyItemRemoved(position)
+                        listener.onDelete(position)
                         true
                     }
                     R.id.menu_call -> {
@@ -63,5 +62,9 @@ class StudentAdapter(val students: MutableList<StudentModel>): RecyclerView.Adap
         val hoten = itemView.findViewById<TextView>(R.id.name)
         val mssv = itemView.findViewById<TextView>(R.id.id)
         val popupMenu = itemView.findViewById<ImageView>(R.id.popup_menu)
+    }
+
+    interface DeleteListener {
+        fun onDelete(position: Int)
     }
 }
